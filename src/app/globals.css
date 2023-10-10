@@ -38,6 +38,17 @@
   --callout-border-rgb: 172, 175, 176;
   --card-rgb: 180, 185, 188;
   --card-border-rgb: 131, 134, 135;
+
+  --text-color: #E2BD83;
+  --highlight-color: #D29941;
+  --highlight-transition-time: 0.3s;
+
+  --box-shadow: 0px 0px 16px 0px var(--text-color);
+  --highlight-box-shadow: 0px 0px 20px 0px var(--highlight-color);
+
+  --button-font-size: 1.75rem;
+  --text-box-font-size: 1.1rem;
+  --number-input-font-size: 1.75rem;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -104,4 +115,9 @@ a {
   html {
     color-scheme: dark;
   }
+}
+
+@font-face {
+  font-family: "Quattrocento";
+  src: url('./fonts/Quattrocento-Regular.ttf');
 }

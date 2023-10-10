@@ -1,0 +1,162 @@
+/* 
+    |-----------------------------|
+    | Organization                |
+    |                             |
+    | 1. Display / Justifcations  |
+    | 2. Width / Height           |
+    | 3. Colors / Background      |
+    | 4. Text                     |
+    | 5. Border / Outline         |
+    | 6. Shadows                  |
+    | 7. Transforms               |
+    | 8. Transitions / Animations |
+    |-----------------------------|
+*/
+
+/*
+    |------------|
+    | Components |
+    |------------|
+*/
+
+.button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 12rem;
+    height: 4rem;
+
+    background-color: transparent;
+    color: var(--text-color);
+
+    font-family: "Quattrocento";
+    font-size: var(--button-font-size);
+    text-align: center;
+
+    border-width: 1px;
+    border-style: solid;
+    border-color: var(--text-color);
+    border-radius: 30px;
+
+    transition: all var(--highlight-transition-time);
+}
+
+.button:hover {
+    cursor: pointer;
+}
+
+
+.textBox {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;   
+
+    width: 15rem;
+    height: 4rem; 
+}
+
+.textBoxLabel {
+    color: var(--text-color);
+
+    font-family: "Quattrocento";
+    font-size: var(--text-box-font-size);
+    text-align: left;
+
+    transition: all var(--highlight-transition-time);
+}
+
+.textBoxInput {
+    height: 2.5rem;
+
+    padding: 1rem;
+
+    background-color: transparent;
+    color: var(--text-color);
+
+    font-family: "Quattrocento";
+    font-size: var(--text-box-font-size);
+
+    border-width: 1px;
+    border-style: solid;
+    border-color: var(--text-color);
+    border-radius: 10px;
+    outline: none;
+
+    transition: all var(--highlight-transition-time);
+}
+
+
+.numberInput {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+
+    width: 5rem;
+    height: 7rem;
+
+    color: var(--text-color);
+
+    font-family: "Quattrocento";
+    font-size: var(--number-input-font-size);
+
+    border-width: 1px;
+    border-style: solid;
+    border-color: var(--text-color);
+    border-radius: 10px;
+
+    transition: all var(--highlight-transition-time);
+}
+
+.numberInputArrow {
+    width: 1.5rem;
+    height: 1.5rem;
+
+    fill: none;
+    stroke: var(--text-color);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 2rem;
+
+    transition: all var(--highlight-transition-time);
+}
+
+.numberInputArrow:hover {
+    cursor: pointer;
+}
+
+.numberInputDisplay {
+    transition: all var(--highlight-transition-time);
+}
+
+
+/*
+    |-------------------|
+    | Interaction Rules |
+    |-------------------|
+*/
+
+.glowOnHover:hover {
+    box-shadow: var(--box-shadow);
+}
+
+.focused {
+    color: var(--highlight-color);
+
+    border-color: var(--highlight-color);
+}
+
+.glowOnHover.focused:hover {
+    box-shadow: var(--highlight-box-shadow);
+}
+
+.numberInputArrow.focused {
+    stroke: var(--highlight-color);
+
+    transform: scale(1.2);
+}
+
+.numberInputDisplay.focused {
+    transform: scale(1.2);
+}

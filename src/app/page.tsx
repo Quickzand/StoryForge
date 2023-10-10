@@ -1,5 +1,9 @@
+'use client';
 import Image from 'next/image'
 import styles from './page.module.css'
+import Button from './components/button'
+import TextBox from './components/textBox'
+import NumberInput from './components/numberInput'
 
 export default function Home() {
   return (
@@ -37,6 +41,12 @@ export default function Home() {
           height={37}
           priority
         />
+      </div>
+
+      <Button onClickHandler={() => console.log('5')} />
+      <TextBox label="Character's Name" placeholder="Maximus"/>
+      <div id="5">
+      <NumberInput minumumValue={3} maximumValue={8} initialValue={5}/>
       </div>
 
       <div className={styles.grid}>
