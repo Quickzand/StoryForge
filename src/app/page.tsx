@@ -1,16 +1,16 @@
 "use client";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./pages/login.jsx";
+import Background from "./components/background.jsx";
 
 export default function Home() {
 	return (
 		<main
 			style={{
-				background: "#FFF",
-				height: "100vh",
 				padding: "0",
 				margin: "0",
 			}}>
+			<Background />
 			<Router>
 				<Routes>
 					<Route path="/" element={<Login />}></Route>

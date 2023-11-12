@@ -7,7 +7,7 @@ export default class Login extends React.Component {
 		return (
 			<div
 				style={{
-					height: "100%",
+					height: "100vh",
 					display: "grid",
 					placeItems: "center",
 				}}>
