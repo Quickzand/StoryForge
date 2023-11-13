@@ -8,11 +8,11 @@ class Background extends React.Component {
 		this.state = {
 			environmentalState: props.environmentalState || {
 				environment: "forest",
-				leafCount: 50,
-				timeOfDay: 0.12,
+				leafCount: 275,
+				timeOfDay: 0.1,
 				weather: {
 					type: "cloudy",
-					cloudCoverage: 0.1,
+					cloudCoverage: 0,
 				},
 			},
 		};
@@ -149,11 +149,11 @@ class Leaf {
 		this.rotationSpeed = Math.random() * 0.04 - 0.02; // Random rotation speed
 
 		this.fallSpeed = Math.random() * 0.5 + 0.2; // Vertical fall speed
-		this.driftSpeed = Math.random() * 0.5 + 0.2; // Horizontal drift speed
+		this.driftSpeed = Math.random() * 0.05 + 0.02; // Horizontal drift speed
 	}
 
 	draw() {
-		const leafLength = this.radius * 2; // Length of the leaf
+		const leafLength = this.radius * 2.3; // Length of the leaf
 		const leafWidth = leafLength * 0.6; // Width of the leaf
 
 		this.ctx.save();
@@ -188,7 +188,7 @@ class Leaf {
 		// Reset position if off-screen
 		if (this.x > window.innerWidth + 50 || this.y > window.innerHeight + 50) {
 			this.x = Math.random() * window.innerWidth;
-			this.y = -10;
+			this.y = -100;
 		}
 
 		this.draw();

@@ -26,6 +26,7 @@ class TextBox extends React.Component {
 					backgroundColor: Colors.outsetBackground(1),
 					border: "solid 2px " + Colors.borderColor(),
 					fontSize: "inherit",
+					color: "inherit",
 					padding: "0.5em",
 					borderRadius: "0.5em",
 					width: "100%",
