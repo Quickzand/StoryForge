@@ -10,6 +10,7 @@ export default class Login extends React.Component {
 					height: "100vh",
 					display: "grid",
 					placeItems: "center",
+					color: "black",
 				}}>
 				<form
 					style={{

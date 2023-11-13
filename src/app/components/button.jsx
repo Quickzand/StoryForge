@@ -34,6 +34,7 @@ class Button extends React.Component {
 					fontSize: "inherit",
 					border: "solid 1px ",
 					width: "100%",
+					color: "inherit",
 					boxShadow: this.state.isHovered
 						? Effects.boxShadow()
 						: "0px 0px 0px 0px rgba(0, 0, 0, 0)",
