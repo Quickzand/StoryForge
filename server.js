@@ -30,7 +30,7 @@ app.post("/login", (req, res) => {
 // Incoming: {  }
 // Outgoing: { status }
 app.get("/users", (req, res) => {
-	db.all("SELECT * FROM USERS", (err, rows) => {
+	db.all("SELECT * FROM USER_LOGIN", (err, rows) => {
 		if (err) {
 			res.status(400).json({ error: err.message });
 			return;
@@ -56,7 +56,7 @@ app.post("/users/add", (req, res) => {
     }
 	var data = sanitizeData(req.body);
 	console.log(data);
-	const sql = 'INSERT INTO USERS (USER_ID, USERNAME, PASSWORD) VALUES (?, ?, ?)';
+	const sql = 'INSERT INTO USER_LOGIN (USER_ID, USERNAME, PASSWORD) VALUES (?, ?, ?)';
     const params = [id, username, password];
 
     db.run(sql, params, function(err) {
