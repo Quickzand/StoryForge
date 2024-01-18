@@ -5,6 +5,9 @@ const cors = require("cors");
 app.use(cors());
 app.use(express.json());
 
+//require database
+const db = require("./database.js");
+
 app.listen(port, () => {
 	console.log(`Express server listening at http://localhost:${port}`);
 });
@@ -17,6 +20,54 @@ app.post("/login", (req, res) => {
 	var data = sanitizeData(req.body);
 	console.log(req.body);
 	res.send(data);
+});
+
+//test api to get all users
+//make a get request to http://localhost:5102/users/add
+// *===========================================================*
+// |                Get All Users API			               |
+// *===========================================================*
+// Incoming: { email }
+// Outgoing: { status }
+app.get("/users", (req, res) => {
+	db.all("SELECT * FROM USERS", (err, rows) => {
+		if (err) {
+			res.status(400).json({ error: err.message });
+			return;
+		}
+		res.json({
+			message: "success",
+			data: rows,
+		});
+	});
+});
+
+//test api to insert a user
+//make a post request to http://localhost:5102/users/add
+// *===========================================================*
+// |                	ADD USERS API            			   |
+// *===========================================================*
+// Incoming: { id, username, password }
+// Outgoing: { status }
+app.post("/users/add", (req, res) => {
+	const {id, username, password} = req.body;
+	if (!id || !username || !password) {
+        return res.status(400).send("Missing fields");
+    }
+	var data = sanitizeData(req.body);
+	console.log(data);
+	const sql = 'INSERT INTO USERS (USER_ID, USERNAME, PASSWORD) VALUES (?, ?, ?)';
+    const params = [id, username, password];
+
+    db.run(sql, params, function(err) {
+        if (err) {
+            return res.status(400).json({ error: err.message });
+        }
+        res.json({
+            message: 'success',
+            data: { id: this.lastID }
+        });
+    });
 });
 
 function sanitizeData(data) {
