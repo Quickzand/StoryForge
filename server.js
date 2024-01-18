@@ -1,12 +1,12 @@
 const express = require("express");
 const app = express();
-const port = 3001; // Use a different port from your React app
+const port = 5102; // Use a different port from your React app
 const cors = require("cors");
 app.use(cors());
 app.use(express.json());
 
 app.listen(port, () => {
-	console.log(`Express server listening at https://localhost:${port}`);
+	console.log(`Express server listening at http://localhost:${port}`);
 });
 
 app.get("/", (req, res) => {
