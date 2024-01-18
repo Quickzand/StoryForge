@@ -1,3 +1,5 @@
+-- command to run script: sqlite3 StoryForge.db < create_storyforge_db.sql
+
 PRAGMA foreign_keys = ON;
 
 
