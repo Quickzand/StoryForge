@@ -27,7 +27,7 @@ app.post("/login", (req, res) => {
 // *===========================================================*
 // |                Get All Users API			               |
 // *===========================================================*
-// Incoming: { email }
+// Incoming: {  }
 // Outgoing: { status }
 app.get("/users", (req, res) => {
 	db.all("SELECT * FROM USERS", (err, rows) => {
