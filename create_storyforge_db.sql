@@ -33,3 +33,12 @@ CREATE TABLE ADVENTURES (
     TIMESTAMP TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (USER_ID) REFERENCES USER_LOGIN(USER_ID)
 );
+
+-- Create a new user 'dev' with a specified password
+CREATE USER 'dev'@'localhost' IDENTIFIED BY 'Password1!';
+
+-- Grant privileges to the user 'dev'
+GRANT ALL PRIVILEGES ON StoryForge.* TO 'dev'@'localhost';
+
+-- Apply changes
+FLUSH PRIVILEGES;
