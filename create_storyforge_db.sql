@@ -1,8 +1,11 @@
---to update run: mysql < create_storyforge_db.sql
+-- to update run: mysql < create_storyforge_db.sql
 
 
 DROP DATABASE IF EXISTS storyforge_db;
 CREATE DATABASE storyforge_db;
+
+-- delete user if exists
+DROP USER IF EXISTS 'dev'@'localhost';
 
 -- Use the database
 USE storyforge_db;
@@ -38,10 +41,11 @@ CREATE TABLE ADVENTURES (
 );
 
 -- Create a new user 'dev' with a specified password
-CREATE USER 'dev'@'localhost' IDENTIFIED BY 'Password1!';
+CREATE USER 'dev'@'localhost' IDENTIFIED WITH mysql_native_password BY 'Password1!';
 
 -- Grant privileges to the user 'dev'
-GRANT ALL PRIVILEGES ON StoryForge.* TO 'dev'@'localhost';
+GRANT ALL PRIVILEGES ON storyforge_db.* TO 'dev'@'localhost';
+
 
 -- Apply changes
 FLUSH PRIVILEGES;
