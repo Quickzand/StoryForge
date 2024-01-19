@@ -1,3 +1,6 @@
+--to update run: mysql < create_storyforge_db.sql
+
+
 DROP DATABASE IF EXISTS storyforge_db;
 CREATE DATABASE storyforge_db;
 
