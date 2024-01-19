@@ -16,6 +16,12 @@ app.get("/", (req, res) => {
 	res.send("You've reached the api");
 });
 
+//login api
+// *===========================================================*
+// |                	Login API            			       |
+// *===========================================================*
+// Incoming: { username, password }
+// Outgoing: { status, token }
 app.post("/login", (req, res) => {
 	var data = sanitizeData(req.body);
 	console.log(req.body);
