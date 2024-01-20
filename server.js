@@ -16,6 +16,12 @@ app.get("/", (req, res) => {
 	res.send("You've reached the api");
 });
 
+//login api
+// *===========================================================*
+// |                	Login API            			       |
+// *===========================================================*
+// Incoming: { username, password }
+// Outgoing: { status, token }
 app.post("/login", (req, res) => {
 	var data = sanitizeData(req.body);
 	console.log(req.body);
@@ -30,16 +36,16 @@ app.post("/login", (req, res) => {
 // Incoming: {  }
 // Outgoing: { status }
 app.get("/users", (req, res) => {
-	db.all("SELECT * FROM USER_LOGIN", (err, rows) => {
-		if (err) {
-			res.status(400).json({ error: err.message });
-			return;
-		}
-		res.json({
-			message: "success",
-			data: rows,
-		});
-	});
+    db.query("SELECT * FROM USER_LOGIN", (err, rows) => {
+        if (err) {
+            res.status(400).json({ error: err.message });
+            return;
+        }
+        res.json({
+            message: "success",
+            data: rows
+        });
+    });
 });
 
 //test api to insert a user
@@ -50,25 +56,28 @@ app.get("/users", (req, res) => {
 // Incoming: { id, username, password }
 // Outgoing: { status }
 app.post("/users/add", (req, res) => {
-	const {id, username, password} = req.body;
-	if (!id || !username || !password) {
+    const { username, password } = req.body;
+    if (!username || !password) {
         return res.status(400).send("Missing fields");
     }
-	var data = sanitizeData(req.body);
-	console.log(data);
-	const sql = 'INSERT INTO USER_LOGIN (USER_ID, USERNAME, PASSWORD) VALUES (?, ?, ?)';
-    const params = [id, username, password];
 
-    db.run(sql, params, function(err) {
+    // Assuming 'sanitizeData' function is defined elsewhere to sanitize inputs
+    var data = sanitizeData({ username, password });
+
+    const sql = 'INSERT INTO USER_LOGIN (USERNAME, PASSWORD) VALUES (?, ?)';
+    const params = [data.username, data.password];
+
+    db.query(sql, params, function(err, result) {
         if (err) {
             return res.status(400).json({ error: err.message });
         }
         res.json({
             message: 'success',
-            data: { id: this.lastID }
+            data: { id: result.insertId } // `insertId` is used to get the ID of the inserted row
         });
     });
 });
+
 
 function sanitizeData(data) {
 	if (typeof data === "string") {
