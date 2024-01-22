@@ -22,7 +22,7 @@ DROP TABLE IF EXISTS ADVENTURES;
 CREATE TABLE USER_LOGIN (
     USER_ID INT AUTO_INCREMENT PRIMARY KEY,
     USERNAME VARCHAR(255) NOT NULL,
-    PASSWORD VARCHAR(255) NOT NULL
+    PASS VARCHAR(255) NOT NULL
 );
 
 -- Create USER_INFO Table
@@ -49,3 +49,41 @@ GRANT ALL PRIVILEGES ON storyforge_db.* TO 'dev'@'localhost';
 
 -- Apply changes
 FLUSH PRIVILEGES;
+
+DELIMITER //
+-- INSERT USER_LOGIN
+CREATE PROCEDURE insert_user_login(IN username VARCHAR(255), IN pass VARCHAR(255))
+BEGIN
+    -- Check if the username already exists
+    DECLARE userExists INT;
+    SELECT COUNT(*) INTO userExists FROM USER_LOGIN WHERE USERNAME = username;
+
+    -- Insert the new user only if the username does not exist
+    -- Signal error if the username already exists
+    IF userExists > 0 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'duplicate username';
+    ELSE
+        -- Insert the new user if the username does not exist
+        INSERT INTO USER_LOGIN (USERNAME, PASS) VALUES (username, SHA2(pass, 256));
+    END IF;
+END //
+
+DELIMITER ;
+
+
+DELIMITER //
+CREATE PROCEDURE validate_user(IN input_username VARCHAR(255), IN input_pass VARCHAR(255))
+BEGIN
+    DECLARE isValid INT DEFAULT 0;
+
+    SELECT COUNT(*) INTO isValid 
+    FROM USER_LOGIN 
+    WHERE USERNAME = input_username AND PASS = SHA2(input_pass, 256);
+
+    IF isValid = 0 THEN
+        SELECT 'Invalid' AS STATUS;
+    ELSE 
+        SELECT 'Valid' AS STATUS;
+    END IF;
+END //
+DELIMITER ;
