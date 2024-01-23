@@ -7,6 +7,7 @@ app.use(express.json());
 
 //require database
 const db = require("./database.js");
+const { ok } = require("assert");
 
 app.listen(port, () => {
 	console.log(`Express server listening at http://localhost:${port}`);
@@ -39,8 +40,8 @@ app.post("/login", (req, res) => {
         if (results[0][0].STATUS === 'Invalid') {
             return res.status(400).json({ error: "Invalid username or password" });
         } else {
-            // User is valid
-            res.json({ message: "success" });
+            // User is valid, get token from database
+			return res.status(200).json(results[0][0]);
         }
     });
 });

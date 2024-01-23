@@ -17,6 +17,7 @@ SET foreign_key_checks = 1;
 DROP TABLE IF EXISTS USER_LOGIN;
 DROP TABLE IF EXISTS USER_INFO;
 DROP TABLE IF EXISTS ADVENTURES;
+DROP TABLE IF EXISTS TOKEN_TABLE;
 
 -- Create USER_LOGIN Table
 CREATE TABLE USER_LOGIN (
@@ -37,6 +38,14 @@ CREATE TABLE ADVENTURES (
     ADVENTURE_ID INT AUTO_INCREMENT PRIMARY KEY,
     USER_ID INT NOT NULL,
     TIMESTAMP TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (USER_ID) REFERENCES USER_LOGIN(USER_ID)
+);
+
+-- CREATE TOKEN TABLE
+CREATE TABLE TOKEN_TABLE (
+    TOKEN CHAR(255) NOT NULL,
+    EXPIRY_TIME INT NOT NULL,
+    USER_ID INT NOT NULL,
     FOREIGN KEY (USER_ID) REFERENCES USER_LOGIN(USER_ID)
 );
 
@@ -75,15 +84,27 @@ DELIMITER //
 CREATE PROCEDURE validate_user(IN input_username VARCHAR(255), IN input_pass VARCHAR(255))
 BEGIN
     DECLARE isValid INT DEFAULT 0;
-
+    DECLARE userID INT;
+    DECLARE token_id CHAR(255);
+    SET token_id = UUID();
     SELECT COUNT(*) INTO isValid 
     FROM USER_LOGIN 
     WHERE USERNAME = input_username AND PASS = SHA2(input_pass, 256);
-
     IF isValid = 0 THEN
         SELECT 'Invalid' AS STATUS;
-    ELSE 
-        SELECT 'Valid' AS STATUS;
+    ELSE
+        SELECT USER_ID INTO userID FROM USER_LOGIN WHERE USERNAME = input_username;
+        INSERT INTO TOKEN_TABLE (TOKEN, EXPIRY_TIME, USER_ID) VALUES (token_id, UNIX_TIMESTAMP() + 86400, userID); -- 1 day (we can change later)
+        SELECT token_id AS TOKEN;
     END IF;
 END //
 DELIMITER ;
+
+
+-- testing add user
+CALL insert_user_login('test', 'test');
+
+-- testing validate user
+CALL validate_user('test', 'test');
+CALL validate_user('test', 'test2');
+
