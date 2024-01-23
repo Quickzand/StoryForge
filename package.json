@@ -4,12 +4,16 @@
   "private": true,
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "dev": "next dev",
+    "start:frontend": "next dev",
+    "start:backend": "node server.js",
+    "start": "concurrently \"npm run start:backend\" \"npm run start:frontend\""
   },
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "mysql": "^2.18.1",
+    "next": "^14.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router": "^6.18.0",
