@@ -7,6 +7,7 @@ app.use(express.json());
 
 //require database
 const db = require("./database.js");
+const { ok } = require("assert");
 
 app.listen(port, () => {
 	console.log(`Express server listening at http://localhost:${port}`);
@@ -20,12 +21,29 @@ app.get("/", (req, res) => {
 // *===========================================================*
 // |                	Login API            			       |
 // *===========================================================*
-// Incoming: { username, password }
+// Incoming: { username, pass }
 // Outgoing: { status, token }
 app.post("/login", (req, res) => {
-	var data = sanitizeData(req.body);
-	console.log(req.body);
-	res.send(data);
+    const { username, password } = req.body;
+    if (!username || !password) {
+        return res.status(400).send("Missing fields");
+    }
+    var data = sanitizeData({ username, password });
+    const sql = "CALL validate_user(?, ?)";
+    const params = [data.username, data.password];
+    db.query(sql, params, (err, results, fields) => {
+        if (err) {
+            // Handle SQL error
+            return res.status(500).json({ error: "Internal Server Error" });
+        }
+
+        if (results[0][0].STATUS === 'Invalid') {
+            return res.status(400).json({ error: "Invalid username or password" });
+        } else {
+            // User is valid, get token from database
+			return res.status(200).json(results[0][0]);
+        }
+    });
 });
 
 //test api to get all users
@@ -53,7 +71,7 @@ app.get("/users", (req, res) => {
 // *===========================================================*
 // |                	ADD USERS API            			   |
 // *===========================================================*
-// Incoming: { id, username, password }
+// Incoming: { username, password }
 // Outgoing: { status }
 app.post("/users/add", (req, res) => {
     const { username, password } = req.body;
@@ -64,7 +82,7 @@ app.post("/users/add", (req, res) => {
     // Assuming 'sanitizeData' function is defined elsewhere to sanitize inputs
     var data = sanitizeData({ username, password });
 
-    const sql = 'INSERT INTO USER_LOGIN (USERNAME, PASSWORD) VALUES (?, ?)';
+    const sql = 'CALL insert_user_login(?, ?)';
     const params = [data.username, data.password];
 
     db.query(sql, params, function(err, result) {
@@ -73,7 +91,7 @@ app.post("/users/add", (req, res) => {
         }
         res.json({
             message: 'success',
-            data: { id: result.insertId } // `insertId` is used to get the ID of the inserted row
+            data: { id: result.insertId }
         });
     });
 });
