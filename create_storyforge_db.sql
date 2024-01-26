@@ -61,20 +61,33 @@ FLUSH PRIVILEGES;
 
 DELIMITER //
 -- INSERT USER_LOGIN
-CREATE PROCEDURE insert_user_login(IN username VARCHAR(255), IN pass VARCHAR(255))
+CREATE PROCEDURE insert_user_login(IN input_username VARCHAR(255), IN input_pass VARCHAR(255))
 BEGIN
     -- Check if the username already exists
     DECLARE userExists INT;
-    SELECT COUNT(*) INTO userExists FROM USER_LOGIN WHERE USERNAME = username;
+    DECLARE passLength INT;
+    
+    -- Create a temporary table for response
+    CREATE TEMPORARY TABLE IF NOT EXISTS RESPONSE (
+        RESPONSE_STATUS VARCHAR(20),
+        RESPONSE_MESSAGE VARCHAR(255)
+    );
+    
+    SELECT COUNT(*) INTO userExists FROM USER_LOGIN WHERE USERNAME = input_username;
+    SELECT LENGTH(input_pass) INTO passLength;
 
     -- Insert the new user only if the username does not exist
-    -- Signal error if the username already exists
     IF userExists > 0 THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'duplicate username';
+        INSERT INTO RESPONSE VALUES ('Error', 'Username already exists');
+    ELSEIF passLength < 8 THEN
+        INSERT INTO RESPONSE VALUES ('Error', 'Password must be at least 8 characters');
     ELSE
         -- Insert the new user if the username does not exist
-        INSERT INTO USER_LOGIN (USERNAME, PASS) VALUES (username, SHA2(pass, 256));
+        INSERT INTO USER_LOGIN (USERNAME, PASS) VALUES (input_username, SHA2(input_pass, 256));
+        INSERT INTO RESPONSE VALUES ('Success', 'User added');
     END IF;
+    SELECT * FROM RESPONSE;
+    DROP TEMPORARY TABLE RESPONSE;
 END //
 
 DELIMITER ;
@@ -102,9 +115,10 @@ DELIMITER ;
 
 
 -- testing add user
-CALL insert_user_login('test', 'test');
-
+CALL insert_user_login('test', 'testing123');
+CALL insert_user_login('test', 'testing1234');
+CALL insert_user_login('test2', 'testing123');
 -- testing validate user
-CALL validate_user('test', 'test');
+CALL validate_user('test', 'testing123');
 CALL validate_user('test', 'test2');
 

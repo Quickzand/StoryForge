@@ -66,14 +66,13 @@ app.get("/users", (req, res) => {
     });
 });
 
-//test api to insert a user
-//make a post request to http://localhost:5102/users/add
+
 // *===========================================================*
-// |                	ADD USERS API            			   |
+// |                	USER SIGNUP API            			   |
 // *===========================================================*
 // Incoming: { username, password }
 // Outgoing: { status }
-app.post("/users/add", (req, res) => {
+app.post("/users/signup", (req, res) => {
     const { username, password } = req.body;
     if (!username || !password) {
         return res.status(400).send("Missing fields");
@@ -84,15 +83,20 @@ app.post("/users/add", (req, res) => {
 
     const sql = 'CALL insert_user_login(?, ?)';
     const params = [data.username, data.password];
-
     db.query(sql, params, function(err, result) {
+        // Handle SQL error
         if (err) {
             return res.status(400).json({ error: err.message });
         }
-        res.json({
-            message: 'success',
-            data: { id: result.insertId }
-        });
+
+        //extract the response from the stored procedure
+        const response = result[0][0];
+
+        if (response.RESPONSE_STATUS === 'Error') {
+            return res.status(400).json({ error: response.RESPONSE_MESSAGE });
+        }
+        return res.status(200).json();
+
     });
 });
 
