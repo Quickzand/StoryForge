@@ -116,9 +116,7 @@ DELIMITER ;
 
 -- testing add user
 CALL insert_user_login('test', 'testing123');
-CALL insert_user_login('test', 'testing1234');
 CALL insert_user_login('test2', 'testing123');
 -- testing validate user
 CALL validate_user('test', 'testing123');
-CALL validate_user('test', 'test2');
 

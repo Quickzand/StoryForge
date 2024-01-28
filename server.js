@@ -1,8 +1,7 @@
 const express = require("express");
 const app = express();
-const port = 5102; // Use a different port from your React app
-const cors = require("cors");
-app.use(cors());
+const port = 2363; // Use a different port from your React app
+
 app.use(express.json());
 
 //require database
@@ -17,33 +16,40 @@ app.get("/", (req, res) => {
 	res.send("You've reached the api");
 });
 
+app.get("/test", (req, res) => {
+	res.send("You've reached the api");
+});
+
 //login api
 // *===========================================================*
 // |                	Login API            			       |
 // *===========================================================*
 // Incoming: { username, pass }
 // Outgoing: { status, token }
-app.post("/login", (req, res) => {
-    const { username, password } = req.body;
-    if (!username || !password) {
-        return res.status(400).send("Missing fields");
-    }
-    var data = sanitizeData({ username, password });
-    const sql = "CALL validate_user(?, ?)";
-    const params = [data.username, data.password];
-    db.query(sql, params, (err, results, fields) => {
-        if (err) {
-            // Handle SQL error
-            return res.status(500).json({ error: "Internal Server Error" });
-        }
+app.post("/api/login", (req, res) => {
+	const { username, password } = req.body;
+	if (!username || !password) {
+		return res.status(400).send("Missing fields");
+	}
+	var data = sanitizeData({ username, password });
+	const sql = "CALL validate_user(?, ?)";
+	const params = [data.username, data.password];
+	db.query(sql, params, (err, results, fields) => {
+		if (err) {
+			console.log("INVALID LOGIN");
+			// Handle SQL error
+			return res.status(500).json({ error: "Internal Server Error" });
+		}
 
-        if (results[0][0].STATUS === 'Invalid') {
-            return res.status(400).json({ error: "Invalid username or password" });
-        } else {
-            // User is valid, get token from database
+		if (results[0][0].STATUS === "Invalid") {
+			console.log("INVALID LOGIN");
+			return res.status(400).json({ error: "Invalid username or password" });
+		} else {
+			// User is valid, get token from database
+			console.log("VALID LOGIN");
 			return res.status(200).json(results[0][0]);
-        }
-    });
+		}
+	});
 });
 
 //test api to get all users
@@ -53,53 +59,50 @@ app.post("/login", (req, res) => {
 // *===========================================================*
 // Incoming: {  }
 // Outgoing: { status }
-app.get("/users", (req, res) => {
-    db.query("SELECT * FROM USER_LOGIN", (err, rows) => {
-        if (err) {
-            res.status(400).json({ error: err.message });
-            return;
-        }
-        res.json({
-            message: "success",
-            data: rows
-        });
-    });
+app.get("/api/users", (req, res) => {
+	db.query("SELECT * FROM USER_LOGIN", (err, rows) => {
+		if (err) {
+			res.status(400).json({ error: err.message });
+			return;
+		}
+		res.json({
+			message: "success",
+			data: rows,
+		});
+	});
 });
-
 
 // *===========================================================*
 // |                	USER SIGNUP API            			   |
 // *===========================================================*
 // Incoming: { username, password }
 // Outgoing: { status }
-app.post("/users/signup", (req, res) => {
-    const { username, password } = req.body;
-    if (!username || !password) {
-        return res.status(400).send("Missing fields");
-    }
+app.post("/api/users/signup", (req, res) => {
+	const { username, password } = req.body;
+	if (!username || !password) {
+		return res.status(400).send("Missing fields");
+	}
 
-    // Assuming 'sanitizeData' function is defined elsewhere to sanitize inputs
-    var data = sanitizeData({ username, password });
+	// Assuming 'sanitizeData' function is defined elsewhere to sanitize inputs
+	var data = sanitizeData({ username, password });
 
-    const sql = 'CALL insert_user_login(?, ?)';
-    const params = [data.username, data.password];
-    db.query(sql, params, function(err, result) {
-        // Handle SQL error
-        if (err) {
-            return res.status(400).json({ error: err.message });
-        }
+	const sql = "CALL insert_user_login(?, ?)";
+	const params = [data.username, data.password];
+	db.query(sql, params, function (err, result) {
+		// Handle SQL error
+		if (err) {
+			return res.status(400).json({ error: err.message });
+		}
 
-        //extract the response from the stored procedure
-        const response = result[0][0];
+		//extract the response from the stored procedure
+		const response = result[0][0];
 
-        if (response.RESPONSE_STATUS === 'Error') {
-            return res.status(400).json({ error: response.RESPONSE_MESSAGE });
-        }
-        return res.status(200).json();
-
-    });
+		if (response.RESPONSE_STATUS === "Error") {
+			return res.status(400).json({ error: response.RESPONSE_MESSAGE });
+		}
+		return res.status(200).json();
+	});
 });
-
 
 function sanitizeData(data) {
 	if (typeof data === "string") {
