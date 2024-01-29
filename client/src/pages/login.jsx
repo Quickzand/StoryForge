@@ -1,6 +1,7 @@
 import React from "react";
 import TextBox from "../components/textBox.jsx";
 import Button from "../components/button.jsx";
+import Strings from "../constants/strings.jsx";
 
 export default class Login extends React.Component {
 	constructor(props) {
@@ -79,17 +80,17 @@ export default class Login extends React.Component {
 					}}
 					onSubmit={this.handleSubmit}>
 					<TextBox
-						placeholder="Email"
+						placeholder={Strings.Email()}
 						name="email"
 						onChange={this.handleInputChange}
 					/>
 					<TextBox
-						placeholder="Password"
+						placeholder={Strings.Password()}
 						type="password"
 						name="password"
 						onChange={this.handleInputChange}
 					/>
-					<Button type="submit">Login</Button>
+					<Button type="submit">{Strings.Login()}</Button>
 				</form>
 			</div>
 		);
