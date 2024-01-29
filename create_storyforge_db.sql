@@ -78,9 +78,9 @@ BEGIN
 
     -- Insert the new user only if the email does not exist
     IF emailExists > 0 THEN
-        INSERT INTO RESPONSE VALUES ('Error', 'Email already exists');
+        INSERT INTO RESPONSE VALUES ('Error', 'duplicateEmail');
     ELSEIF passLength < 8 THEN
-        INSERT INTO RESPONSE VALUES ('Error', 'Password must be at least 8 characters');
+        INSERT INTO RESPONSE VALUES ('Error', 'invalidPass');
     ELSE
         -- Insert the new user if the email does not exist
         INSERT INTO USER_LOGIN (EMAIL, PASS) VALUES (input_email, SHA2(input_pass, 256));
