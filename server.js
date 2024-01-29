@@ -24,26 +24,24 @@ app.get("/test", (req, res) => {
 // *===========================================================*
 // |                	Login API            			       |
 // *===========================================================*
-// Incoming: { username, pass }
+// Incoming: { email, pass }
 // Outgoing: { status, token }
 app.post("/api/login", (req, res) => {
-	const { username, password } = req.body;
-	if (!username || !password) {
+	const { email, password } = req.body;
+	if (!email || !password) {
 		return res.status(400).send("Missing fields");
 	}
-	var data = sanitizeData({ username, password });
+	var data = sanitizeData({ email, password });
 	const sql = "CALL validate_user(?, ?)";
-	const params = [data.username, data.password];
+	const params = [data.email, data.password];
 	db.query(sql, params, (err, results, fields) => {
 		if (err) {
-			console.log("INVALID LOGIN");
 			// Handle SQL error
 			return res.status(500).json({ error: "Internal Server Error" });
 		}
 
 		if (results[0][0].STATUS === "Invalid") {
-			console.log("INVALID LOGIN");
-			return res.status(400).json({ error: "Invalid username or password" });
+			return res.status(400).json({ error: "Invalid email or password" });
 		} else {
 			// User is valid, get token from database
 			console.log("VALID LOGIN");
@@ -75,19 +73,19 @@ app.get("/api/users", (req, res) => {
 // *===========================================================*
 // |                	USER SIGNUP API            			   |
 // *===========================================================*
-// Incoming: { username, password }
+// Incoming: { email, password }
 // Outgoing: { status }
 app.post("/api/users/signup", (req, res) => {
-	const { username, password } = req.body;
-	if (!username || !password) {
+	const { email, password } = req.body;
+	if (!email || !password) {
 		return res.status(400).send("Missing fields");
 	}
 
 	// Assuming 'sanitizeData' function is defined elsewhere to sanitize inputs
-	var data = sanitizeData({ username, password });
+	var data = sanitizeData({ email, password });
 
 	const sql = "CALL insert_user_login(?, ?)";
-	const params = [data.username, data.password];
+	const params = [data.email, data.password];
 	db.query(sql, params, function (err, result) {
 		// Handle SQL error
 		if (err) {
