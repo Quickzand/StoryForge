@@ -122,10 +122,25 @@ BEGIN
 END //
 DELIMITER ;
 
+DELIMITER //
+CREATE PROCEDURE delete_old_tokens()
+BEGIN
+    DELETE FROM TOKEN_TABLE WHERE EXPIRY_TIME < UNIX_TIMESTAMP();
+END //
+DELIMITER ;
+
+
+-- create event to delete old tokens
+CREATE EVENT IF NOT EXISTS delete_old_tokens_event
+ON SCHEDULE EVERY 1 DAY
+DO
+    CALL delete_old_tokens();
+
+
+
 
 -- testing add user
 CALL insert_user_login('test', 'testing123');
 CALL insert_user_login('test2', 'testing123');
 -- testing validate user
 -- CALL validate_user('test', 'testing123');
-
