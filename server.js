@@ -39,7 +39,7 @@ app.post("/api/login", (req, res) => {
 			// Handle SQL error
 			return res.status(400).json({ error: "sqlError" });
 		}
-        
+
         const response = results[0][0];
 
 		if (response.RESPONSE_STATUS === "Error") {
@@ -91,7 +91,7 @@ app.post("/api/users/signup", (req, res) => {
 	db.query(sql, params, function (err, result) {
 		// Handle SQL error
 		if (err) {
-			return res.status(400).json({ error: err.message });
+			return res.status(400).json({ error: "sqlError" });
 		}
 
 		//extract the response from the stored procedure
