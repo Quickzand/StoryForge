@@ -37,15 +37,17 @@ app.post("/api/login", (req, res) => {
 	db.query(sql, params, (err, results, fields) => {
 		if (err) {
 			// Handle SQL error
-			return res.status(500).json({ error: "Internal Server Error" });
+			return res.status(400).json({ error: "sqlError" });
 		}
+        
+        const response = results[0][0];
 
-		if (results[0][0].STATUS === "Invalid") {
-			return res.status(400).json({ error: "Invalid email or password" });
+		if (response.RESPONSE_STATUS === "Error") {
+			return res.status(400).json({error: response.RESPONSE_MESSAGE});
 		} else {
 			// User is valid, get token from database
 			console.log("VALID LOGIN");
-			return res.status(200).json(results[0][0]);
+			return res.status(200).json(response.RESPONSE_MESSAGE);
 		}
 	});
 });

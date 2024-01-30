@@ -96,20 +96,29 @@ DELIMITER ;
 DELIMITER //
 CREATE PROCEDURE validate_user(IN input_email VARCHAR(255), IN input_pass VARCHAR(255))
 BEGIN
+    -- logic variables
     DECLARE isValid INT DEFAULT 0;
     DECLARE userID INT;
     DECLARE token_id CHAR(255);
+    -- create id for token
     SET token_id = UUID();
-    SELECT COUNT(*) INTO isValid 
-    FROM USER_LOGIN 
-    WHERE EMAIL = input_email AND PASS = SHA2(input_pass, 256);
+
+    -- Create a temporary table for response
+    CREATE TEMPORARY TABLE IF NOT EXISTS RESPONSE (
+        RESPONSE_STATUS VARCHAR(20),
+        RESPONSE_MESSAGE VARCHAR(255)
+    );
+    -- check if user exists
+    SELECT COUNT(*) INTO isValid FROM USER_LOGIN WHERE EMAIL = input_email AND PASS = SHA2(input_pass, 256);
     IF isValid = 0 THEN
-        SELECT 'Invalid' AS STATUS;
+        INSERT INTO RESPONSE VALUES ('Error', 'invalidCredentials');
     ELSE
         SELECT USER_ID INTO userID FROM USER_LOGIN WHERE EMAIL = input_email;
         INSERT INTO TOKEN_TABLE (TOKEN, EXPIRY_TIME, USER_ID) VALUES (token_id, UNIX_TIMESTAMP() + 86400, userID); -- 1 day (we can change later)
-        SELECT token_id AS TOKEN;
+        INSERT INTO RESPONSE VALUES ('Success', token_id);
     END IF;
+    SELECT * FROM RESPONSE;
+    DROP TEMPORARY TABLE RESPONSE;
 END //
 DELIMITER ;
 
