@@ -80,7 +80,7 @@ app.get("/api/users", (req, res) => {
 app.post("/api/users/signup", (req, res) => {
 	const { username, password } = req.body;
 	if (!username || !password) {
-		return res.status(400).send("Missing fields");
+		return res.status(400).json({error: "Missing fields"});
 	}
 
 	// Assuming 'sanitizeData' function is defined elsewhere to sanitize inputs
@@ -96,7 +96,7 @@ app.post("/api/users/signup", (req, res) => {
 
 		//extract the response from the stored procedure
 		const response = result[0][0];
-
+		
 		if (response.RESPONSE_STATUS === "Error") {
 			return res.status(400).json({ error: response.RESPONSE_MESSAGE });
 		}

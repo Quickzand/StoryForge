@@ -1,6 +1,7 @@
 "use client";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./pages/login.jsx";
+import Signup from "./pages/signup.jsx"
 import Background from "./components/background.jsx";
 
 export default function App() {
@@ -14,6 +15,7 @@ export default function App() {
 			<Router>
 				<Routes>
 					<Route path="/" element={<Login />}></Route>
+					<Route path="/sign-up" element={<Signup />}></Route>
 				</Routes>
 			</Router>
 		</main>

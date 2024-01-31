@@ -8,4 +8,16 @@ export default class Strings {
 	static Login() {
 		return "Login";
 	}
+	static Submit() {
+		return "Submit";
+	}
+	static Signup() {
+		return "Sign Up"
+	}
+	static ParseSignupError(error) {
+		return error;
+	}
+	static EmailInvalidError() {
+		return "Please enter a valid email address.";
+	}
 }
