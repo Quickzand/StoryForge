@@ -109,10 +109,10 @@ BEGIN
     SELECT COUNT(*) INTO emailExists FROM USER_LOGIN WHERE EMAIL = input_NewEmail;
     SELECT COUNT(*) INTO validToken FROM TOKEN_TABLE WHERE TOKEN = input_token AND EXPIRY_TIME > UNIX_TIMESTAMP();
     -- Insert the new user only if the email does not exist
-    IF emailExists > 0 THEN
-        INSERT INTO RESPONSE VALUES ('Error', 'duplicateEmail');
-    ELSEIF validToken = 0 THEN
+    IF validToken = 0 THEN
         INSERT INTO RESPONSE VALUES ('Error', 'invalidToken');
+    ELSEIF emailExists > 0 THEN
+        INSERT INTO RESPONSE VALUES ('Error', 'duplicateEmail');
     ELSE
         -- Insert the new user if the email does not exist
         SELECT USER_ID INTO id FROM TOKEN_TABLE WHERE TOKEN = input_token;
