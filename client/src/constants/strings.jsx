@@ -31,4 +31,14 @@ export default class Strings {
 				return "Sign Up failed";
 		}
 	}
+	static LoginErrorMessage(errorMessage) {
+		switch (errorMessage) {
+			case "invalidCredentials":
+				return "Your email or password is incorrect";
+			case "missingFields":
+				return "Email and Password are required";
+			default:
+				return "Login failed";
+		}
+	}
 }

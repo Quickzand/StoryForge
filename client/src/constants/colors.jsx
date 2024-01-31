@@ -24,7 +24,7 @@ export default class Colors {
 
 	// Returns translucent background based on alpha value (0 - 255)
 	static translucentBackground() {
-		return "#00000080"
+		return "#00000080";
 	}
 
 	static outsetBackground(level) {
@@ -38,5 +38,9 @@ export default class Colors {
 
 	static borderColor() {
 		return "#463319";
+	}
+
+	static error() {
+		return "#FF8080";
 	}
 }

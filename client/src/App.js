@@ -1,7 +1,7 @@
 "use client";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./pages/login.jsx";
-import Signup from "./pages/signup.jsx"
+import Signup from "./pages/signup.jsx";
 import Background from "./components/background.jsx";
 
 export default function App() {
