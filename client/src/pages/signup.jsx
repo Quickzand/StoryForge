@@ -49,12 +49,12 @@ export default class Signup extends React.Component {
 			// Check for successful signup
 			if (data.status === 200) {
 				data.json().then((data) => {
-					// TODO
+					console.log(data);
 				});
 			} else if (data.status === 400) {
 				console.log(data);
 				data.json().then((data) => {
-					this.setErrorMessage(Strings.ParseSignupError(data.error));
+					this.setErrorMessage(Strings.SignupErrorMessage(data.error));
 				});
 			}
 		});

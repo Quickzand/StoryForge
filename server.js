@@ -100,7 +100,7 @@ app.post("/api/users/signup", (req, res) => {
 		if (response.RESPONSE_STATUS === "Error") {
 			return res.status(400).json({ error: response.RESPONSE_MESSAGE });
 		}
-		return res.status(200).json();
+		return res.status(200).json({});
 	});
 });
 
