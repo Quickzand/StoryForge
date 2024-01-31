@@ -65,7 +65,6 @@ export default class Login extends React.Component {
 					localStorage.setItem("token", data.TOKEN);
 					localStorage.setItem("user", JSON.stringify(data.user));
 					console.log(data.TOKEN);
-					// window.location.href = "/testTokenValidation";
 				});
 			} else {
 				// Login failed
