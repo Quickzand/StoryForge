@@ -40,10 +40,10 @@ app.post("/api/login", (req, res) => {
 			return res.status(400).json({ error: "sqlError" });
 		}
 
-        const response = results[0][0];
+		const response = results[0][0];
 
 		if (response.RESPONSE_STATUS === "Error") {
-			return res.status(400).json({error: response.RESPONSE_MESSAGE});
+			return res.status(400).json({ error: response.RESPONSE_MESSAGE });
 		} else {
 			// User is valid, get token from database
 			console.log("VALID LOGIN");
@@ -78,9 +78,9 @@ app.get("/api/users", (req, res) => {
 // Incoming: { email, password }
 // Outgoing: { status }
 app.post("/api/users/signup", (req, res) => {
-	const { username, password } = req.body;
-	if (!username || !password) {
-		return res.status(400).json({error: "Missing fields"});
+	const { email, password } = req.body;
+	if (!email || !password) {
+		return res.status(400).json({ error: "missingFields" });
 	}
 
 	// Assuming 'sanitizeData' function is defined elsewhere to sanitize inputs
@@ -96,7 +96,7 @@ app.post("/api/users/signup", (req, res) => {
 
 		//extract the response from the stored procedure
 		const response = result[0][0];
-		
+
 		if (response.RESPONSE_STATUS === "Error") {
 			return res.status(400).json({ error: response.RESPONSE_MESSAGE });
 		}
