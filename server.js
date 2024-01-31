@@ -104,6 +104,38 @@ app.post("/api/users/signup", (req, res) => {
 	});
 });
 
+
+// *===========================================================*
+// |                	CHANGE EMAIL API           			   |
+// *===========================================================*
+// Incoming: { token, newEmail }
+// Outgoing: { status }
+app.post("/api/users/changeEmail", (req, res) => {
+    const { token, newEmail } = req.body;
+    if (!token || !newEmail) {
+        return res.status(400).json({ error: "missingFields" });
+    }
+
+    var data = sanitizeData({ token, newEmail });
+
+    const sql = "CALL reset_email(?, ?)";
+    const params = [data.token, data.newEmail];
+    db.query(sql, params, function (err, result) {
+        // Handle SQL error
+        if (err) {
+            return res.status(400).json({ error: "sqlError" });
+        }
+
+        //extract the response from the stored procedure
+        const response = result[0][0];
+
+        if (response.RESPONSE_STATUS === "Error") {
+            return res.status(400).json({ error: response.RESPONSE_MESSAGE });
+        }
+        return res.status(200).json(response.RESPONSE_MESSAGE);
+    });
+});
+
 function sanitizeData(data) {
 	if (typeof data === "string") {
 		// String sanitization
