@@ -19,12 +19,14 @@ export default class Strings {
 	}
 	static SignupErrorMessage(errorMessage) {
 		switch (errorMessage) {
-			case "emailExists":
+			case "duplicateEmail":
 				return "Email already exists";
 			case "invalidPass":
 				return "Password must contain more than 8 characters";
 			case "invalidEmail":
 				return "Invalid Email";
+			case "missingFields":
+				return "Email and Password are required";
 			default:
 				return "Sign Up failed";
 		}
