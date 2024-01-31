@@ -19,12 +19,15 @@ class TextBox extends React.Component {
 	};
 
 	render() {
+		var borderColor = this.props.invalid
+			? Colors.error()
+			: Colors.borderColor();
 		return (
 			<input
 				type="text"
 				style={{
 					backgroundColor: Colors.outsetBackground(1),
-					border: "solid 2px " + Colors.borderColor(),
+					border: "solid 2px " + borderColor,
 					fontSize: "inherit",
 					color: "inherit",
 					padding: "0.5em",

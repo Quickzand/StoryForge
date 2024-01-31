@@ -2,6 +2,7 @@ import React from "react";
 import TextBox from "../components/textBox.jsx";
 import Button from "../components/button.jsx";
 import Strings from "../constants/strings.jsx";
+import ErrorMessage from "../components/errorMessage.jsx";
 
 export default class Login extends React.Component {
 	constructor(props) {
@@ -10,6 +11,9 @@ export default class Login extends React.Component {
 		this.state = {
 			email: "",
 			password: "",
+			errorMessage: "",
+			invalidEmail: false,
+			invalidPassword: false,
 		};
 
 		// Bind functions to this
@@ -28,6 +32,20 @@ export default class Login extends React.Component {
 	// Handle form submission
 	handleSubmit(event) {
 		event.preventDefault();
+		if (this.state.email === "" || this.state.password === "") {
+			this.setState({
+				invalidEmail: this.state.email === "",
+				invalidPassword: this.state.password === "",
+				errorMessage: "missingFields",
+			});
+			return;
+		} else {
+			this.setState({
+				invalidEmail: false,
+				invalidPassword: false,
+				errorMessage: "",
+			});
+		}
 		// Attempt to login
 		fetch("/api/login", {
 			method: "POST",
@@ -41,7 +59,6 @@ export default class Login extends React.Component {
 		}).then((data) => {
 			if (data.status === 200) {
 				// Login successful
-				// window.location.href = "/testTokenValidation";
 				console.log("Login successful");
 				data.json().then((data) => {
 					console.log(data);
@@ -53,12 +70,22 @@ export default class Login extends React.Component {
 			} else {
 				// Login failed
 				console.log("Login failed");
-				console.log(data);
+				data.json().then((data) => {
+					this.setState({
+						errorMessage: data.error,
+					});
+				});
 			}
 		});
 	}
 
 	render() {
+		var errorMessageComponent =
+			this.state.errorMessage !== "" ? (
+				<ErrorMessage
+					error={Strings.LoginErrorMessage(this.state.errorMessage)}
+				/>
+			) : null;
 		return (
 			<div
 				style={{
@@ -83,13 +110,16 @@ export default class Login extends React.Component {
 						placeholder={Strings.Email()}
 						name="email"
 						onChange={this.handleInputChange}
+						invalid={this.state.invalidEmail}
 					/>
 					<TextBox
 						placeholder={Strings.Password()}
 						type="password"
 						name="password"
 						onChange={this.handleInputChange}
+						invalid={this.state.invalidPassword}
 					/>
+					{errorMessageComponent}
 					<Button type="submit">{Strings.Login()}</Button>
 				</form>
 			</div>
