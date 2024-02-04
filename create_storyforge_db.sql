@@ -160,6 +160,30 @@ BEGIN
 END //
 DELIMITER ;
 
+DELIMITER //
+CREATE PROCEDURE validate_token(IN input_token CHAR(255))
+BEGIN
+    -- logic variables
+    DECLARE isValid INT DEFAULT 0;
+
+    -- Create a temporary table for response
+    CREATE TEMPORARY TABLE IF NOT EXISTS RESPONSE (
+        RESPONSE_STATUS VARCHAR(20),
+        RESPONSE_MESSAGE VARCHAR(255)
+    );
+
+    -- check if token exists
+    SELECT COUNT(*) INTO isValid FROM TOKEN_TABLE WHERE TOKEN = input_token AND EXPIRY_TIME > UNIX_TIMESTAMP();
+    IF isValid = 0 THEN
+        INSERT INTO RESPONSE VALUES ('Error', 'invalidToken');
+    ELSE    
+        INSERT INTO RESPONSE VALUES ('Success', 'validToken');
+    END IF;
+    SELECT * FROM RESPONSE;
+    DROP TEMPORARY TABLE RESPONSE;
+END //
+DELIMITER ;
+
 
 -- create event to delete old tokens
 CREATE EVENT IF NOT EXISTS delete_old_tokens_event
