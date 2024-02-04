@@ -92,6 +92,37 @@ END //
 
 DELIMITER ;
 
+DELIMITER //
+-- RESET EMAIL
+CREATE PROCEDURE reset_email(IN input_token CHAR(255), IN input_NewEmail VARCHAR(255))
+BEGIN
+    -- check exist
+    DECLARE emailExists INT;
+    DECLARE validToken INT;
+    DECLARE id INT;
+    -- Create a temporary table for response
+    CREATE TEMPORARY TABLE IF NOT EXISTS RESPONSE (
+        RESPONSE_STATUS VARCHAR(20),
+        RESPONSE_MESSAGE VARCHAR(255)
+    );
+    
+    SELECT COUNT(*) INTO emailExists FROM USER_LOGIN WHERE EMAIL = input_NewEmail;
+    SELECT COUNT(*) INTO validToken FROM TOKEN_TABLE WHERE TOKEN = input_token AND EXPIRY_TIME > UNIX_TIMESTAMP();
+    -- Insert the new user only if the email does not exist
+    IF validToken = 0 THEN
+        INSERT INTO RESPONSE VALUES ('Error', 'invalidToken');
+    ELSEIF emailExists > 0 THEN
+        INSERT INTO RESPONSE VALUES ('Error', 'duplicateEmail');
+    ELSE
+        -- Insert the new user if the email does not exist
+        SELECT USER_ID INTO id FROM TOKEN_TABLE WHERE TOKEN = input_token;
+        UPDATE USER_LOGIN SET EMAIL = input_NewEmail WHERE USER_ID = id;
+        INSERT INTO RESPONSE VALUES ('Success', 'updatedEmail');
+    END IF;
+    SELECT * FROM RESPONSE;
+    DROP TEMPORARY TABLE RESPONSE;
+END //
+DELIMITER ;
 
 DELIMITER //
 CREATE PROCEDURE validate_user(IN input_email VARCHAR(255), IN input_pass VARCHAR(255))
@@ -140,7 +171,9 @@ DO
 
 
 -- testing add user
+CALL insert_user_login('admin', 'admin123');
 CALL insert_user_login('test', 'testing123');
 CALL insert_user_login('test2', 'testing123');
 -- testing validate user
 -- CALL validate_user('test', 'testing123');
+-- CALL validate_user('test2', 'testing123');
