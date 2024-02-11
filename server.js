@@ -142,7 +142,7 @@ app.post("/api/users/changeEmail", (req, res) => {
 // *===========================================================*
 // Incoming: { token }
 // Outgoing: { status }
-app.post("/api/validate_token", (req, res) => {
+app.post("/api/tokenValidation", (req, res) => {
 	const{token} = req.body;
 	if(!token){
 		return res.status(400).json({error: "missingFields"});
