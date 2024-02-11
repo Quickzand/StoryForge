@@ -161,7 +161,7 @@ END //
 DELIMITER ;
 
 DELIMITER //
-CREATE PROCEDURE validate_token(IN input_token CHAR(255))
+CREATE PROCEDURE tokenValidation(IN input_token CHAR(255))
 BEGIN
     -- logic variables
     DECLARE isValid INT DEFAULT 0;
