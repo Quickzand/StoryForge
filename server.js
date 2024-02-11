@@ -150,7 +150,7 @@ app.post("/api/tokenValidation", (req, res) => {
 
 	var data = sanitizeData({token});
 
-	const sql = "CALL validate_token(?)";
+	const sql = "CALL tokenValidation(?)";
 	const params = [data.token];
 	db.query(sql, params, function (err, result){
 		// Handle SQL error
