@@ -146,10 +146,10 @@ class Leaf {
 		this.color = color; // Color of the leaf
 		this.angle = angle; // Angle for swaying motion
 		this.rotation = Math.random() * Math.PI * 2; // Initial random rotation
-		this.rotationSpeed = Math.random() * 0.04 - 0.02; // Random rotation speed
+		this.rotationSpeed = Math.random() * 0.02 - 0.01; // Random rotation speed
 
-		this.fallSpeed = Math.random() * 0.5 + 0.2; // Vertical fall speed
-		this.driftSpeed = Math.random() * 0.05 + 0.02; // Horizontal drift speed
+		this.fallSpeed = Math.random() *  0.04 + 0.2; // Vertical fall speed
+		this.driftSpeed = Math.random() * 0.03 + 0.02; // Horizontal drift speed
 	}
 
 	draw() {

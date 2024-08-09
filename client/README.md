@@ -2,6 +2,16 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## QuickStart Guide
+Mac users should be able to run 
+### `npm run update-db`
+to update their database
+
+Then run
+### `npm run dev` 
+to open local servers
+
+
 ## Available Scripts
 
 In the project directory, you can run:
